@@ -88,26 +88,10 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
     #util.raiseNotDefined()
-    """s = util.Stack()
-    response = []
-    start = problem.getStartState()
-    
-    if problem.isGoalState(start): return response
-    for node in problem.getSuccessors(start): 
-        s.push(node)
-        response.append(node[1]) #Add the direction to the 
-    s.push(start)
-    while not s.isEmpty():
-        vertex = s.pop()
-        if problem.isGoalState(vertex): break
-        response.pop()
-
-    #return get_directions(response)"""
     fringe = util.Stack()
     fringe.push( (problem.getStartState(), [], []) )
     while not fringe.isEmpty():
         node, actions, visited = fringe.pop()
-
         for coord, direction, steps in problem.getSuccessors(node):
             if not coord in visited:
                 if problem.isGoalState(coord):
@@ -126,7 +110,6 @@ def breadthFirstSearch(problem):
     visited = []
     while not fringe.isEmpty():
         node, actions = fringe.pop()
-
         for coord, direction, steps in problem.getSuccessors(node):
             if not coord in visited:
                 if problem.isGoalState(coord):

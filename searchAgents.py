@@ -381,28 +381,25 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    #return 0 # Default to trivial solution
-    return 0
-    node = state[0]
-    visitedCorners = state[1]
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    return 0 # Default to trivial solution
+    # node = state[0]
+    # visitedCorners = state[1]
 
-    unvisitedCorners = []
-    thesum = 0
-    for corner in corners:
-        if not corner in visitedCorners:
-            unvisitedCorners.append(corner)
+    # unvisitedCorners = []
+    # thesum = 0
+    # for corner in corners:
+    #     if not corner in visitedCorners:
+    #         unvisitedCorners.append(corner)
 
-    currentPoint = node
-    while len(unvisitedCorners) > 0:
-        distance, corner = min([(util.manhattanDistance(currentPoint, corner), corner) for corner in unvisitedCorners])
-        thesum += distance
-        currentPoint = corner
-        unvisitedCorners.remove(corner)
+    # currentPoint = node
+    # while len(unvisitedCorners) > 0:
+    #     distance, corner = min([(util.manhattanDistance(currentPoint, corner), corner) for corner in unvisitedCorners])
+    #     thesum += distance
+    #     currentPoint = corner
+    #     unvisitedCorners.remove(corner)
 
-    print "Heuristic: ", thesum
-    return thesum
+    # #print "Heuristic: ", thesum
+    # return thesum
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -496,18 +493,6 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    foodList = list(foodGrid.asList())
-    gs = problem.startingGameState
-
-    if not problem.heuristicInfo.get('foodDistanceGrid', False):
-        problem.heuristicInfo['foodDistanceGrid'] = {}
-
-    foodDistanceGrid = problem.heuristicInfo['foodDistanceGrid']
-
-    totalDistance = 0
-
-    if len(foodList) > 0:
-        return totalDistance
     return 0
 
 class ClosestDotSearchAgent(SearchAgent):
