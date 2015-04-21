@@ -288,7 +288,7 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
-        self.startState = (self.startingPosition, self.corners)
+        self.estado_inicial = (self.startingPosition, self.corners)
 
     def getStartState(self):
         """
@@ -297,7 +297,7 @@ class CornersProblem(search.SearchProblem):
         """
         "*** YOUR CODE HERE ***"
         #util.raiseNotDefined()
-        return self.startState
+        return self.estado_inicial
 
     def isGoalState(self, state):
         """
@@ -332,18 +332,18 @@ class CornersProblem(search.SearchProblem):
             "*** YOUR CODE HERE ***"
             x,y = state[0][0], state[0][1]
             dx, dy = Actions.directionToVector(action)
-            nextx, nexty = int(x + dx), int(y + dy)
-            hitsWall = self.walls[nextx][nexty]
-            cornersLeft = state[1]
-            if (nextx, nexty) in cornersLeft:
-                for i in range(len(cornersLeft)):
-                    if cornersLeft[i] == (nextx, nexty):
+            siguiente_x, siguiente_y = int(x + dx), int(y + dy)
+            hitsWall = self.walls[siguiente_x][siguiente_y]
+            esquinas_faltantes = state[1]
+            if (siguiente_x, siguiente_y) in esquinas_faltantes:
+                for i in range(len(esquinas_faltantes)):
+                    if esquinas_faltantes[i] == (siguiente_x, siguiente_y):
                         break
-                cornersLeft = cornersLeft[:i] + cornersLeft[i+1:]
+                esquinas_faltantes = esquinas_faltantes[:i] + esquinas_faltantes[i+1:]
             if not hitsWall:
-                nextState = ((nextx, nexty), cornersLeft)
-                cost = 1
-                successors.append( (nextState, action, cost) )
+                siguiente_estado = ((siguiente_x, siguiente_y), esquinas_faltantes)
+                costo = 1
+                successors.append( (siguiente_estado, action, costo) )
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -397,39 +397,35 @@ def cornersHeuristic(state, problem):
     #     unvisitedCorners.remove(corner)
 
     # return thesum
-    distance = 0
-    cornersLeft = list(state[1])
+    distancia = 0
+    esquinasFaltantes = list(state[1])
     pacman = state[0]
     closest = 0
-    cornersList = []
+    lista_esquinas = []
     minI = 0
-    distance_to_nearest = 0
+    distancia_al_mas_cercano = 0
     total = 0
-    
-    if len(cornersLeft) > 0:
-        for i in range(len(cornersLeft)):
-            corner = cornersLeft[i]
-            cornersList.append(abs(pacman[0] - corner[0]) + abs(pacman[1] - corner[1]))
-        distance_to_nearest = min(cornersList)      
-        minI = cornersList.index(distance_to_nearest)
-        closest = cornersLeft[minI]
-      
-        cornersLeft.remove(closest)
-        while len(cornersLeft) > 0:
-          distanceList = []
+    if len(esquinasFaltantes) > 0:
+        for i in range(len(esquinasFaltantes)):
+            corner = esquinasFaltantes[i]
+            lista_esquinas.append(abs(pacman[0] - corner[0]) + abs(pacman[1] - corner[1]))
+        distancia_al_mas_cercano = min(lista_esquinas)      
+        minI = lista_esquinas.index(distancia_al_mas_cercano)
+        closest = esquinasFaltantes[minI]
+        esquinasFaltantes.remove(closest)
+        while len(esquinasFaltantes) > 0:
+          lista_distancia = []
           xy1 = closest
-          for i in range(len(cornersLeft)):
-              xy2 = cornersLeft[i]
-              distanceList.append(abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1]))
-          closest2 = min(distanceList)
-          minI = distanceList.index(closest2)
-          closest = cornersLeft[minI]
-          cornersLeft.remove(closest)
-          
+          for i in range(len(esquinasFaltantes)):
+              xy2 = esquinasFaltantes[i]
+              lista_distancia.append(abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1]))
+          closest2 = min(lista_distancia)
+          minI = lista_distancia.index(closest2)
+          closest = esquinasFaltantes[minI]
+          esquinasFaltantes.remove(closest)
           total = total + closest2
-        distance = distance_to_nearest + total
-      
-    return distance
+        distancia = distancia_al_mas_cercano + total
+    return distancia
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -524,32 +520,29 @@ def foodHeuristic(state, problem):
     #position, foodGrid = state
     "*** YOUR CODE HERE ***"
     #return 0
-    position, foodGrid = state
-    maximum=-1
-    maxdot=position
-    for food in foodGrid.asList():
-        distance=abs(position[0]-food[0])+abs(position[1]-food[1])
-        if(distance>maximum):
-            maximum=distance
-            maxdot=food
-    dim=position[0]-maxdot[0]
-
-    foodCount=0
-    for food in foodGrid.asList():
+    posicion, matriz_comida = state
+    maximo=-1
+    punto_maximo=posicion
+    for comida in matriz_comida.asList():
+        distancia=abs(posicion[0]-comida[0])+abs(posicion[1]-comida[1])
+        if(distancia>maximo):
+            maximo=distancia
+            punto_maximo=comida
+    dim=posicion[0]-punto_maximo[0]
+    num_comida=0
+    for comida in matriz_comida.asList():
         if dim>0:
-            if (position[0]-food[0])<0 :
-                foodCount+=1
+            if (posicion[0]-comida[0])<0 :
+                num_comida+=1
         elif dim<0:
-            if (position[0]-food[0])>0 :
-                foodCount+=1
+            if (posicion[0]-comida[0])>0 :
+                num_comida+=1
         else:
-            if (position[0]-food[0])!=0 :
-                foodCount+=1
-    
-    if maximum < 0:
-        maximum = 0
-
-    return maximum + foodCount
+            if (posicion[0]-comida[0])!=0 :
+                num_comida+=1
+    if maximo < 0:
+        maximo = 0
+    return maximo + num_comida
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -582,7 +575,6 @@ class ClosestDotSearchAgent(SearchAgent):
         "*** YOUR CODE HERE ***"
         #util.raiseNotDefined()
         actions = search.aStarSearch(problem)
-
         return actions
         
 

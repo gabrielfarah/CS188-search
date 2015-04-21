@@ -115,18 +115,18 @@ def breadthFirstSearch(problem):
     cola = util.Queue()
     cola.push((problem.getStartState(), [], 0))
     while not cola.isEmpty():
-        padreState, padreAccion, padreCosto = cola.pop()
-        if problem.isGoalState(padreState):
-            return padreAccion
-        elif padreState in visitados:
+        padre_estado, padre_accion, padre_costo = cola.pop()
+        if problem.isGoalState(padre_estado):
+            return padre_accion
+        elif padre_estado in visitados:
             continue
         else:
-            hijos = problem.getSuccessors(padreState)
-            for hijoState, hijoAccion, hijoCosto in hijos:
-                if hijoState not in visitados:
-                    cola.push((hijoState, padreAccion + [hijoAccion], hijoCosto + padreCosto))
-            visitados.append(padreState)
-    return padreAccion
+            hijos = problem.getSuccessors(padre_estado)
+            for estado_hijo, hijo_accion, hijo_costo in hijos:
+                if estado_hijo not in visitados:
+                    cola.push((estado_hijo, padre_accion + [hijo_accion], hijo_costo + padre_costo))
+            visitados.append(padre_estado)
+    return padre_accion
                 
   
 
@@ -149,24 +149,24 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     visitados = []
     cola = util.PriorityQueue()
-    start = problem.getStartState()
-    cola.push((start, [], 0), 0)
+    inicial = problem.getStartState()
+    cola.push((inicial, [], 0), 0)
     while not cola.isEmpty():
-        padreState, padreAccion, padreCosto = cola.pop()
-        if problem.isGoalState(padreState):
-            return padreAccion
-        elif padreState in visitados:
+        estado_padre, accion_padre, costo_padre = cola.pop()
+        if problem.isGoalState(estado_padre):
+            return accion_padre
+        elif estado_padre in visitados:
             continue
         else:
-            hijos = problem.getSuccessors(padreState)
-            for hijoState, hijoAccion, hijoCosto in hijos:
-                if hijoState not in visitados:
-                    gCosto = padreCosto + hijoCosto
-                    hCosto = heuristic(hijoState, problem)
-                    fCosto = gCosto + hCosto
-                    cola.push((hijoState, padreAccion + [hijoAccion], gCosto), fCosto)
-            visitados.append(padreState)
-    return padreAccion
+            hijos = problem.getSuccessors(estado_padre)
+            for estado_hijo, accion_hijo, costo_hijo in hijos:
+                if estado_hijo not in visitados:
+                    nCosto = costo_padre + costo_hijo
+                    hCosto = heuristic(estado_hijo, problem)
+                    costo_total = nCosto + hCosto
+                    cola.push((estado_hijo, accion_padre + [accion_hijo], nCosto), costo_total)
+            visitados.append(estado_padre)
+    return accion_padre
         
 
 # Abbreviations
